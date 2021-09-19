@@ -1,0 +1,12 @@
+.vscode/
+.bloop/
+.bsp/
+.metals/
+*.log
+
+# course files
+
+
+# jupyter book
+*.yml
+_build/
