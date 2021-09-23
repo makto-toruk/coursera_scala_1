@@ -140,3 +140,227 @@
     - Example: arrays, databases, optional values, etc
     - This is the basis of _Spark_ :)
 
+## 1.3 Functional Random Generators
+
+- Random values:
+    ```scala
+    val rand = java.util.Random()
+    rand.nextInt()
+    ```
+    But how would we get random values for other types such as booleans, strings, lists, sets, or even trees?
+
+- Generator
+    ```scala
+    train Generator[+T]:
+        def generate(): T
+    ```
+    generates random values of type `T`.
+    - Instances:
+        ```scala
+        val integers = new Generator[Int]:
+            val rand = java.util.Random()
+            def generate() = rand.nextInt()
+
+        val booleans = new Generator[Boolean]:
+            def generate() = integers.generate() > 0
+
+        val pairs = new Generator[(Int, Int)]:
+            def generate() = (integers.generate(), integers.generate())
+        ```
+
+- How do we streamline this? We would _like_ to use `for`:
+    ```scala
+    val booleans = for x <- integers yield x > 0
+
+    def pairs[T, U](t: Generator[T], u: Generator[U]) = 
+        for x <- t; y <- u yield (x, y)
+    ```
+    which can be rewritten as:
+    ```scala
+    val booleans = integers.map(x => x > 0)
+
+    def pairs[T, U](t: Generator[T], u: Generator[U]) = 
+        t.flatMap(x => u.map(y => (x, y))) 
+    ```
+    but requires implementation of `map` and `flatMap`.
+
+- Here's a fuller version of `Generator`:
+    ```scala
+    trait Generator[+T]:
+        def generate(): T
+        
+        def map[S](f: T => S) = new Generator[S]:
+            def generate() = f(Generator.this.generate())
+        
+        def flatMap[S](f: T => Generator[S]) = new Generator[S]:
+            def generate() = f(Generator.this.generate()).generate()
+    ```
+    `Generator.this` refers to the `this` of the outer object of class `Generator`
+
+- Does this work? We can verify:
+    - booleans
+        ```scala
+        val booleans = for x <- integers yield x > 0
+
+        val booleans = integers.map(x => x > 0)
+
+        val booleans = new Generator[Boolean]:
+            def generate() = ((x: Int) => x > 0)(integers.generate())
+
+        val booleans = new Generator[Boolean]:
+            def generate() = integers.generate() > 0
+        ```
+    - pairs
+        ```scala
+        def pairs[T, U](t: Generator[T], u: Generator[U]) = t.flatMap(
+            x => u.map(y => (x, y)))
+
+        def pairs[T, U](t: Generator[T], u: Generator[U]) = t.flatMap(
+            x => new Generator[(T, U)] { def generate() = (x, u.generate()) })
+
+        def pairs[T, U](t: Generator[T], u: Generator[U]) = new Generator[(T, U)]:
+            def generate() = (new Generator[(T, U)]:
+            def generate() = (t.generate(), u.generate())
+            ).generate()
+
+        def pairs[T, U](t: Generator[T], u: Generator[U]) = new Generator[(T, U)]:
+            def generate() = (t.generate(), u.generate())
+        ```
+
+- More Generator Examples:
+    ```scala
+    def single[T](x: T): Generator[T] = new Generator[T]:
+        def generate() = x
+
+    def range(lo: Int, hi: Int): Generator[Int] =
+        for x <- integers yield lo + x.abs % (hi - lo)
+
+    def oneOf[T](xs: T*): Generator[T] =
+        for idx <- range(0, xs.length) yield xs(idx)
+    ```
+
+- A `List` Generator: Lists are either empty or non-empty
+    ```scala
+    def lists: Generator[List[Int]] = 
+        for
+            isEmpty <- booleans
+            list <- if isEmpty then emptyLists else nonEmptyLists
+        yield list
+
+    def emptyLists = single(Nil) // must be a `Generator`
+
+    def nonEmptyLists = 
+        for 
+            head <- integers
+            tail <- lists
+        yield head :: tail
+    ```
+
+- A `Tree` Generator: either leaf or an inner tree
+    ```scala
+    enum Tree:
+        case Inner(left: Tree, right: Tree)
+        case Leaf(x: Int)
+
+    def trees: Generator[Tree] =
+        for
+            isLeaf <- booleans
+            tree <- if isLeaf then leafs else inners
+        yield tree
+
+    def leafs = for x <- integers yield Tree.Leaf(x)
+
+    def inners = 
+        for 
+            x <- trees
+            y <- trees
+        yield Tree.Inner(x, y)
+    ```
+
+- Why do we care about this? Random generators allow for a powerful testing framework.
+    ```scala
+    def test[T](g: Generator[T], numTimes: Int = 100)
+            (test: T => Boolean): Unit =
+        for i <- 0 until numTimes do
+            val value = g.generate()
+            assert(test(value), s"test failed for $value")
+        println(s"passed $numTimes tests")
+    ```
+
+- Usage:
+    ```scala
+    test(pairs(lists, lists)) {
+        (xs, ys) => (xs ++ ys).length >= xs.length
+    }
+    ```
+
+- What are we doing here exactly? Instead of writing unit tests, write _properties_ that are assumed to hold.
+
+- ScalaCheck implementation example:
+    ```scala
+    forAll { (l1: List[Int], l2: List[Int]) => 
+        l1.size + l2.size == (l1 ++ l2).size
+    }
+    ```
+
+## 1.4 Monads
+
+- What is a Monad? It's a parametric type `M[T]` with two operations
+    - `flatMap`
+    - `unit`
+    - Implementation:
+        ```scala
+        extension [T, U](m: M[T])
+            def flatMap(f: T => M[U]): M[U]
+
+        def unit[T](x: T): M[T]
+        ```
+
+- Have we seen Monads before? Yes!
+    - `List` is a monad with `unit(x) = List(x)`
+    - `Set` with `unit(x) = Set(x)`
+    - `Option` with `unit(x) = Some(x)`
+    - `Generator` with `unit(x) = single(x)`
+
+- `map` can be defined using `flatMap` and `unit`
+    ```scala
+    m.map(f) == m.flatMap(x => unit(f(x)))
+            == m.flatMap(f andThen unit)
+    ```
+    - `andThen` is used for function composition
+
+- Monad laws
+    - Associativity:
+        ```scala
+        m.flatMap(f).flatMap(g) == m.flatMap(f(_).flatMap(g))
+        ```
+    - Left unit:
+        ```scala
+        unit(x).flatMap(f) == f(x)
+        ```
+    - Right unit
+        ```scala
+        m.flatMap(unit) == m
+        ```
+
+- Checking laws: skipped
+
+- Signficance of laws for `for`-expressions
+    1. Associativity enables "inline" nested for expressions
+        ```scala
+        for
+            y <- for x <- m; y <- f(x) yield y
+            z <- g(y)
+        yield z
+        ```
+        `==`
+        ```scala
+        for x <- m; y <- f(x); z <- g(y)
+        yield z
+        ```
+    2. Right unit says:
+        ```scala
+        for x <- m yield x
+        ```
+        `== m`
+    
