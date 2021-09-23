@@ -364,3 +364,72 @@
         ```
         `== m`
     
+## 1.5 Exceptional Monads
+
+- Handling exceptions in Scala
+    ```scala
+    class BadInput(msg: String) extends Exception(msg)
+    throw BadInput("missing data")
+    ```
+
+- Using `try / catch`
+    ```scala
+    def validatedInput(): String =
+        try getInput()
+        catch
+            case BadInput(msg) => println(msg); validatedInput()
+            case ex: Exception => println("fatal error; aborting"); throw ex
+    ```
+
+- Critique:
+    - Exceptions don't show up in the types of functions that throw them
+    - They don't work in parallel computations where we want to communicate an exception from one thread to another
+    - Scala has a `Try` type which can be used to treat an exception as a normal function result value.
+
+- `Try`:
+    ```scala
+    abstract class Try[+T]
+    case class Success[+T](x: T) extends Try[T]
+    case class Failure(ex: Exception) extends Try[Nothing]
+    ```
+
+- We can wrap any computation within a `Try`
+    ```scala
+    Try(expr) // gives Success(someValue) or Failure(someException)
+    ```
+
+- Implementation of `Try.apply`:
+    ```scala
+    import scala.util.control.NonFatal
+
+    object Try:
+        def apply[T](expr: => T): Try[T] =
+            try Success(expr)
+            catch case NonFatal(ex) => Failure(ex)
+    ```
+
+- Composing `Try` with `for`
+    ```scala
+    for
+        x <- computeX
+        y <- computeY
+    yield f(x, y)
+    ```
+    - if `computeX` and `computeY` succeed, this returns `Success(f(x, y))`
+    - else `Failure(ex)`
+
+- So what are the implementations of `flatMap` and `map`?
+    ```scala
+    extension [T](xt: Try[T])
+        def flatMap[U](f: T => Try[U]): Try[U] = xt match
+            case Success(x) => try f(x) catch case NonFatal(ex) => Failure(ex)
+            case fail: Failure => fail
+
+        def map[U](f: T => U): Try[U] = xt match
+            case Success(x) => Try(f(x))
+            case fail: Failure => fail
+    ```
+
+- Is `Try` a monad with `unit = Try`? No, `Try(expr).flatMap(f) != f(expr)` as RHS might throw an exception.
+
+- _Bullet-proof_ principle: An expression composed from `Try`, `map`, `flatMap` will never throw a non-fatal exception.
