@@ -6,6 +6,7 @@
 
 # course files
 quickcheck/
+streams/
 
 # jupyter book
 *.yml
