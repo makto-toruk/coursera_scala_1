@@ -96,7 +96,7 @@
     sort(strings)(using Ordering.String)
     ```
 
-- Using clasuses syntax:
+- Using clauses syntax:
     ```scala
     def f(x: Int)(using a: A, b: B) = ...
     f(x)(using a, b)
@@ -187,7 +187,7 @@
         - `X`
         - `Foo` (not `Baz`)
 
-- Ambiguous given isntances:
+- Ambiguous given instances:
     ```scala
     trait C:
     val x: Int
@@ -243,3 +243,45 @@
     - `b`
 
 ## 3.3 Type Classes
+
+- Example implementation of ordering for Rationals
+    ```scala
+    case class Rational(numer: Int, denom: Int)
+
+    trait Ordering[A] with
+        def compare(x: A, y: A): Boolean
+
+    given RationalOrdering: Ordering[Rational] with
+        def compare(x: Rational, y: Rational) = 
+            val xn = x.numer * y.denom
+            val yn = y.numer * x.denom
+
+            if xn < yn then -1 else if xn > yn then 1 else 0
+    ```
+
+- Ordering for lists?
+    ```scala
+    given listOrdering[A](using ord: Ordering[A]) as Ordering[List[A]] with
+
+        def compare(xs: List[A], ys: List[A]) = (xs, ys) match
+            case (Nil, Nil) => 0
+            case (Nil, _) => -1
+            case (_, Nil) => 1
+            case (x :: xs1, y :: ys1) =>
+                val c = ord.compare(x, y)
+                if c != 0 then c else compare(xs1, ys1)
+    ```
+
+- Ordering for pairs of type (A, B)
+    ```scala
+    type Address = (Int, String) // Zipcode, Street Name
+    val xs = List[Address]
+    sort(xs)
+
+    given pairOrdering[A, B](using orda: Ordering[A], ordb: Ordering[B]): Ordering[(A, B)] with
+        def compare(x: (A, B), y: (A, B)) = 
+            val c = orda.compare(x._1, y._1)
+            if c != 0 then c else ordb.compare(x._2, y._2)
+    ```
+
+## 3.4
