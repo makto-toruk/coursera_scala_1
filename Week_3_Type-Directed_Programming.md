@@ -284,4 +284,10 @@
             if c != 0 then c else ordb.compare(x._2, y._2)
     ```
 
-## 3.4
+## 3.4 Abstract algebra and type classes
+
+## 3.5 Context passing
+
+## 3.6 Implicit function types
+
+- I skipped notes for this lecture. It was mostly theoretical, and I was able to do the homework without diving too deep into these topics. Might come back to it later if required.
