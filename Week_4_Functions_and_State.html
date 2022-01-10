@@ -1,0 +1,581 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>4. Functions and State &#8212; Lectures notes for Functional Programming Design in Scala by Martin Odersky</title>
+    
+  <link href="_static/css/theme.css" rel="stylesheet">
+  <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.be7d3bbb2ef33a8344ce.js">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
+    <script async="async" src="https://unpkg.com/thebe@0.5.1/lib/index.js"></script>
+    <script>
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="5. Timely Effects" href="Week_5_Timely_Effects.html" />
+    <link rel="prev" title="3. Type-Directed Programming" href="Week_3_Type-Directed_Programming.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Lectures notes for Functional Programming Design in Scala by Martin Odersky</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="Week_1_For_Expressions_and_Monads.html">
+   1. For Expressions and Monads
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Week_2_Lazy_Evaluation.html">
+   2. Lazy Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Week_3_Type-Directed_Programming.html">
+   3. Type-Directed Programming
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   4. Functions and State
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Week_5_Timely_Effects.html">
+   5. Timely Effects
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/Week_4_Functions_and_State.md"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.md</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/makto-toruk/coursera_scala_1"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        <a class="issues-button"
+            href="https://github.com/makto-toruk/coursera_scala_1/issues/new?title=Issue%20on%20page%20%2FWeek_4_Functions_and_State.html&body=Your%20issue%20content%20here."><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
+        <a class="edit-button" href="https://github.com/makto-toruk/coursera_scala_1/edit/master/Week_4_Functions_and_State.md"><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Edit this page"><i class="fas fa-pencil-alt"></i>suggest edit</button></a>
+    </div>
+</div>
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id1">
+   4.1 Functions and State
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#identity-and-change">
+   4.2 Identity and Change
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#loops">
+   4.3 Loops
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#advanced-example-discrete-event-simulation">
+   4.4 Advanced Example: Discrete Event Simulation
+  </a>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>4. Functions and State</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id1">
+   4.1 Functions and State
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#identity-and-change">
+   4.2 Identity and Change
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#loops">
+   4.3 Loops
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#advanced-example-discrete-event-simulation">
+   4.4 Advanced Example: Discrete Event Simulation
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="functions-and-state">
+<h1>4. Functions and State<a class="headerlink" href="#functions-and-state" title="Permalink to this headline">¶</a></h1>
+<section id="id1">
+<h2>4.1 Functions and State<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p>Mutable states are constructed through “variables”. They’re written like a value definition but with <code class="docutils literal notranslate"><span class="pre">var</span></code>:</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="kd">var</span> <span class="n">x</span><span class="p">:</span> <span class="nc">String</span> <span class="o">=</span> <span class="s">&quot;abc&quot;</span>
+<span class="kd">var</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">111</span>
+</pre></div>
+</div>
+</li>
+<li><p>However, associations for variables can be changed later though an assignment:</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="s">&quot;hi&quot;</span>
+<span class="n">count</span> <span class="o">=</span> <span class="n">count</span> <span class="o">+</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</li>
+<li><p>State using Objects:</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">BankAccount</span><span class="p">:</span>
+    <span class="k">private</span> <span class="kd">var</span> <span class="n">balance</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">// cannot be accessed from outside the class</span>
+
+    <span class="k">def</span> <span class="nf">deposit</span><span class="p">(</span><span class="n">amount</span><span class="p">:</span> <span class="nc">Int</span><span class="p">):</span> <span class="nc">Unit</span> <span class="o">=</span>
+        <span class="k">if</span> <span class="n">amount</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">then</span> <span class="n">balance</span> <span class="o">=</span> <span class="n">balance</span> <span class="o">+</span> <span class="n">account</span>
+
+    <span class="k">def</span> <span class="nf">withdraw</span><span class="p">(</span><span class="n">amount</span><span class="p">:</span> <span class="nc">Int</span><span class="p">):</span> <span class="nc">Int</span> <span class="o">=</span> 
+        <span class="k">if</span> <span class="n">amount</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">amount</span> <span class="o">&lt;=</span> <span class="n">balance</span> <span class="k">then</span>
+            <span class="n">balance</span> <span class="o">=</span> <span class="n">balance</span> <span class="o">-</span> <span class="n">amount</span>
+            <span class="n">balance</span>
+        <span class="k">else</span> <span class="k">throw</span> <span class="nc">Error</span><span class="p">(</span><span class="s">&quot;insufficient funds&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>Working with Mutable Objects:</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="kd">val</span> <span class="n">account</span> <span class="o">=</span> <span class="nc">BankAccount</span><span class="p">()</span>
+<span class="n">account</span><span class="p">.</span><span class="n">deposit</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span> <span class="c1">// </span>
+<span class="n">account</span><span class="p">.</span><span class="n">withdraw</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span> <span class="c1">// balance = 30</span>
+<span class="n">account</span><span class="p">.</span><span class="n">withdraw</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span> <span class="c1">// balance = 10</span>
+<span class="n">account</span><span class="p">.</span><span class="n">withdraw</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span> <span class="c1">// Error: insufficient funds</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">account.withdraw(20)</span></code> produces different results. Accounts are “stateful objects”.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="identity-and-change">
+<h2>4.2 Identity and Change<a class="headerlink" href="#identity-and-change" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p>Operational equivalence: <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> are operationally equivalent if no possible test can distinguish between them.</p></li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">val</span> <span class="pre">x</span> <span class="pre">=</span> <span class="pre">E;</span> <span class="pre">val</span> <span class="pre">y</span> <span class="pre">=</span> <span class="pre">E</span></code>, <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> are the same. So we could have rewritten <code class="docutils literal notranslate"><span class="pre">val</span> <span class="pre">x</span> <span class="pre">=</span> <span class="pre">E;</span> <span class="pre">val</span> <span class="pre">y</span> <span class="pre">=</span> <span class="pre">x</span></code></p></li>
+<li><p>Suppose:</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="kd">val</span> <span class="n">x</span> <span class="o">=</span> <span class="nc">BankAccount</span><span class="p">()</span>
+<span class="kd">val</span> <span class="n">y</span> <span class="o">=</span> <span class="nc">BankAccount</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Are <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> the same here?</p>
+</li>
+<li><p>To test if they are the same, execute the definitions followed by an arbitrary sequence of operations that involves x and y, observing the outcomes: say <code class="docutils literal notranslate"><span class="pre">S</span></code>.</p></li>
+<li><p>Then, execute the definitions with another sequence <code class="docutils literal notranslate"><span class="pre">S'</span></code> obtained by renaming all occurrences of <code class="docutils literal notranslate"><span class="pre">y</span></code> by <code class="docutils literal notranslate"><span class="pre">x</span></code> in <code class="docutils literal notranslate"><span class="pre">S</span></code>. If the results are differnet, <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> are different.</p></li>
+<li><p>Counterexample:</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="kd">val</span> <span class="n">x</span> <span class="o">=</span> <span class="nc">BankAccount</span><span class="p">()</span>
+<span class="kd">val</span> <span class="n">y</span> <span class="o">=</span> <span class="nc">BankAccount</span><span class="p">()</span>
+<span class="n">x</span><span class="p">.</span><span class="n">deposit</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span> <span class="c1">// 30</span>
+<span class="n">y</span><span class="p">.</span><span class="n">withdraw</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span> <span class="c1">// insufficient funds</span>
+</pre></div>
+</div>
+<ul>
+<li><p>replace <code class="docutils literal notranslate"><span class="pre">y</span></code> by <code class="docutils literal notranslate"><span class="pre">x</span></code>:</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="kd">val</span> <span class="n">x</span> <span class="o">=</span> <span class="nc">BankAccount</span><span class="p">()</span>
+<span class="kd">val</span> <span class="n">y</span> <span class="o">=</span> <span class="nc">BankAccount</span><span class="p">()</span>
+<span class="n">x</span><span class="p">.</span><span class="n">deposit</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span> <span class="c1">// 30</span>
+<span class="n">x</span><span class="p">.</span><span class="n">withdraw</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span> <span class="c1">// 10 (this is different)</span>
+</pre></div>
+</div>
+<p>Conclude that <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> are not the same.</p>
+</li>
+</ul>
+</li>
+<li><p>On the otherhand</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="kd">val</span> <span class="n">x</span> <span class="o">=</span> <span class="nc">BankAccount</span><span class="p">()</span>
+<span class="kd">val</span> <span class="n">y</span> <span class="o">=</span> <span class="n">x</span>
+</pre></div>
+</div>
+<p>results in <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> being the same. So our original substitution model ceases to be valid when we add the assignment.</p>
+</li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="loops">
+<h2>4.3 Loops<a class="headerlink" href="#loops" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p>Scala program that uses a <code class="docutils literal notranslate"><span class="pre">while</span></code> loop:</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">power</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nc">Double</span><span class="p">,</span> <span class="n">exp</span><span class="p">:</span> <span class="nc">Int</span><span class="p">):</span> <span class="nc">Double</span> <span class="o">=</span> 
+    <span class="kd">var</span> <span class="n">r</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="kd">var</span> <span class="n">i</span> <span class="o">=</span> <span class="n">exp</span>
+    <span class="k">while</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">do</span> <span class="p">{</span> <span class="n">r</span> <span class="o">=</span> <span class="n">r</span> <span class="o">*</span> <span class="n">x</span><span class="p">;</span> <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span> <span class="p">}</span>
+    <span class="n">r</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">while-do</span></code> is a built-in control construct, but we can do this with a function</p></li>
+</ul>
+</li>
+</ul>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">whileDo</span><span class="p">(</span><span class="n">condition</span><span class="p">:</span> <span class="o">=&gt;</span> <span class="nc">Boolean</span><span class="p">)(</span><span class="n">command</span><span class="p">:</span> <span class="o">=&gt;</span> <span class="nc">Unit</span><span class="p">):</span> <span class="nc">Unit</span> <span class="o">=</span> 
+    <span class="k">if</span> <span class="n">condition</span> <span class="k">then</span>
+        <span class="n">command</span>
+        <span class="n">whileDo</span><span class="p">(</span><span class="n">condition</span><span class="p">)(</span><span class="n">command</span><span class="p">)</span>
+    <span class="k">else</span> <span class="p">()</span>
+</pre></div>
+</div>
+<ul>
+<li><p>condition and command must be passed by name, so that they’re reevaluated in each iteration</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">whileDo</span></code> is tail recursive.</p></li>
+<li><p>example call: <code class="docutils literal notranslate"><span class="pre">whileDo(x</span> <span class="pre">&gt;</span> <span class="pre">0)(y</span> <span class="pre">=</span> <span class="pre">y</span> <span class="pre">*</span> <span class="pre">y:</span> <span class="pre">x</span> <span class="pre">=</span> <span class="pre">x</span> <span class="pre">-</span> <span class="pre">1)</span></code></p></li>
+<li><p>Implement <code class="docutils literal notranslate"><span class="pre">repeatUntil</span></code> (similar to <code class="docutils literal notranslate"><span class="pre">doWhile</span></code>)</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">repeatUntil</span><span class="p">(</span><span class="n">command</span><span class="p">:</span> <span class="o">=&gt;</span> <span class="nc">Unit</span><span class="p">)(</span><span class="n">condition</span><span class="p">:</span> <span class="o">=&gt;</span> <span class="nc">Boolean</span><span class="p">):</span> <span class="nc">Unit</span> <span class="o">=</span> 
+    <span class="n">command</span>
+    <span class="k">if</span> <span class="o">!</span><span class="n">condition</span> <span class="k">then</span>
+        <span class="n">repeatUntil</span><span class="p">(</span><span class="n">command</span><span class="p">)(</span><span class="n">condition</span><span class="p">)</span>
+    <span class="k">else</span> <span class="p">()</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="advanced-example-discrete-event-simulation">
+<h2>4.4 Advanced Example: Discrete Event Simulation<a class="headerlink" href="#advanced-example-discrete-event-simulation" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p>Digital Circuits</p>
+<ul class="simple">
+<li><p>components: logical gates</p></li>
+<li><p>constraints: delays</p></li>
+</ul>
+</li>
+<li><p>Digital Circuid Diagrams</p>
+<ul class="simple">
+<li><p>complex circuits can be created from logical gates</p></li>
+<li><p>how do we do this through code?</p></li>
+</ul>
+</li>
+<li><p>A language for digital circuits</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="kd">val</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="nc">Wire</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">inverter</span><span class="p">(</span><span class="n">input</span><span class="p">:</span> <span class="nc">Wire</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="nc">Wire</span><span class="p">):</span> <span class="nc">Unit</span>
+<span class="k">def</span> <span class="nf">andGate</span><span class="p">(</span><span class="n">in1</span><span class="p">:</span> <span class="nc">Wire</span><span class="p">,</span> <span class="n">in2</span><span class="p">:</span> <span class="nc">Wire</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="nc">Wire</span><span class="p">):</span> <span class="nc">Unit</span>
+<span class="k">def</span> <span class="nf">orGate</span><span class="p">(</span><span class="n">in1</span><span class="p">:</span> <span class="nc">Wire</span><span class="p">,</span> <span class="n">in2</span><span class="p">:</span> <span class="nc">Wire</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="nc">Wire</span><span class="p">):</span> <span class="nc">Unit</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>read <code class="docutils literal notranslate"><span class="pre">andGate</span></code> as: place and and gate between the two input wires and the output wire.</p></li>
+</ul>
+</li>
+<li><p>Half-adder:</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">halfAdder</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nc">Wire</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nc">Wire</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nc">Wire</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="nc">Wire</span><span class="p">):</span> <span class="nc">Unit</span> <span class="o">=</span>
+    <span class="kd">val</span> <span class="n">d</span> <span class="o">=</span> <span class="nc">Wire</span><span class="p">()</span>
+    <span class="kd">val</span> <span class="n">e</span> <span class="o">=</span> <span class="nc">Wire</span><span class="p">()</span>
+    <span class="n">orGate</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+    <span class="n">andGate</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+    <span class="n">inverter</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+    <span class="n">andGate</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>You could then use this in a full adder (recommend looking at a logic diagram)</p></li>
+</ul>
+</li>
+<li><p>How do we implement these? We need an API for discrete event simulation.</p></li>
+<li><p>Overview: Simulation -&gt; Gates -&gt; Circuits -&gt; Sim (test circuit)</p></li>
+</ul>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">trait</span> <span class="nc">Simulation</span><span class="p">:</span>
+    
+    <span class="k">def</span> <span class="nf">currentTime</span><span class="p">:</span> <span class="nc">Int</span> <span class="o">=</span> <span class="o">???</span>
+    
+    <span class="k">def</span> <span class="nf">afterDelay</span><span class="p">(</span><span class="n">delay</span><span class="p">:</span> <span class="nc">Int</span><span class="p">)(</span><span class="n">block</span><span class="p">:</span> <span class="o">=&gt;</span> <span class="nc">Unit</span><span class="p">):</span> <span class="nc">Unit</span> <span class="o">=</span> 
+        <span class="kd">val</span> <span class="n">item</span> <span class="o">=</span> <span class="nc">Event</span><span class="p">(</span><span class="n">currentTime</span> <span class="o">+</span> <span class="n">delay</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="n">block</span><span class="p">)</span>
+        <span class="n">agenda</span> <span class="o">=</span> <span class="n">insert</span><span class="p">(</span><span class="n">agenda</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">():</span> <span class="nc">Unit</span> <span class="o">=</span> 
+        <span class="n">afterDelay</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">println</span><span class="p">(</span><span class="s">s&quot;simulation started, time = </span><span class="si">$</span><span class="n">currentTime</span><span class="s">&quot;</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="n">loop</span><span class="p">()</span>
+
+<span class="k">end</span> <span class="nc">Simulation</span>
+
+<span class="k">trait</span> <span class="nc">Gates</span> <span class="k">extends</span> <span class="nc">Simulation</span><span class="p">:</span>
+    
+    <span class="k">def</span> <span class="nf">InverterDelay</span><span class="p">:</span> <span class="nc">Int</span>
+    <span class="k">def</span> <span class="nf">AndGateDelay</span><span class="p">:</span> <span class="nc">Int</span>
+    <span class="k">def</span> <span class="nf">OrGateDelay</span><span class="p">:</span> <span class="nc">Int</span>
+    
+    <span class="k">class</span> <span class="nc">Wire</span><span class="p">:</span>
+        <span class="k">private</span> <span class="kd">var</span> <span class="n">sigVal</span> <span class="o">=</span> <span class="kc">false</span>
+        <span class="k">private</span> <span class="kd">var</span> <span class="n">actions</span><span class="p">:</span> <span class="nc">List</span><span class="p">[</span><span class="nc">Action</span><span class="p">]</span> <span class="o">=</span> <span class="nc">List</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">getSignal</span><span class="p">():</span> <span class="nc">Boolean</span> <span class="o">=</span> <span class="n">sigVal</span>
+
+        <span class="k">def</span> <span class="nf">setSignal</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nc">Boolean</span><span class="p">):</span> <span class="nc">Unit</span> <span class="o">=</span> 
+            <span class="k">if</span> <span class="n">s</span> <span class="o">!=</span> <span class="n">sigVal</span> <span class="k">then</span>
+                <span class="n">sigval</span> <span class="o">=</span> <span class="n">s</span>
+                <span class="n">actions</span><span class="p">.</span><span class="n">foreach</span><span class="p">(</span><span class="n">_</span><span class="p">())</span>
+
+        <span class="k">def</span> <span class="nf">addAction</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nc">Action</span><span class="p">):</span> <span class="nc">Unit</span> <span class="o">=</span> 
+            <span class="n">actions</span> <span class="o">=</span> <span class="n">a</span> <span class="o">::</span> <span class="n">actions</span>
+            <span class="n">a</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">inverter</span><span class="p">(</span><span class="n">input</span><span class="p">:</span> <span class="nc">Wire</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="nc">Wire</span><span class="p">):</span> <span class="nc">Unit</span> <span class="o">=</span> 
+        <span class="k">def</span> <span class="nf">invertAction</span><span class="p">():</span> <span class="nc">Unit</span> <span class="o">=</span> 
+            <span class="kd">val</span> <span class="n">inputSig</span> <span class="o">=</span> <span class="n">input</span><span class="p">.</span><span class="n">getSignal</span><span class="p">()</span>
+            <span class="n">afterDelay</span><span class="p">(</span><span class="nc">InverterDelay</span><span class="p">)</span> <span class="p">{</span> <span class="n">output</span><span class="p">.</span><span class="n">setSignal</span><span class="p">(</span><span class="o">!</span><span class="n">inputSig</span><span class="p">)</span> <span class="p">}</span>
+        <span class="n">input</span><span class="p">.</span><span class="n">addAction</span><span class="p">(</span><span class="n">invertAction</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">andGate</span><span class="p">(</span><span class="n">in1</span><span class="p">:</span> <span class="nc">Wire</span><span class="p">,</span> <span class="n">in2</span><span class="p">:</span> <span class="nc">Wire</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="nc">Wire</span><span class="p">):</span> <span class="nc">Unit</span> <span class="o">=</span> 
+        <span class="k">def</span> <span class="nf">andAction</span><span class="p">():</span> <span class="nc">Unit</span> <span class="o">=</span> 
+            <span class="kd">val</span> <span class="n">in1Sig</span> <span class="o">=</span> <span class="n">in1</span><span class="p">.</span><span class="n">getSignal</span><span class="p">()</span>
+            <span class="kd">val</span> <span class="n">in2Sig</span> <span class="o">=</span> <span class="n">in2</span><span class="p">.</span><span class="n">getSignal</span><span class="p">()</span>
+            <span class="n">afterDelay</span><span class="p">(</span><span class="nc">AndGateDelay</span><span class="p">)</span> <span class="p">{</span> <span class="n">output</span><span class="p">.</span><span class="n">setSignal</span><span class="p">(</span><span class="n">in1Sig</span> <span class="n">&amp;</span> <span class="n">in2Sig</span><span class="p">)</span> <span class="p">}</span>
+        <span class="n">in1</span><span class="p">.</span><span class="n">addAction</span><span class="p">(</span><span class="n">andAction</span><span class="p">)</span>
+        <span class="n">in2</span><span class="p">.</span><span class="n">addAction</span><span class="p">(</span><span class="n">andAction</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">orGate</span><span class="p">(</span><span class="n">in1</span><span class="p">:</span> <span class="nc">Wire</span><span class="p">,</span> <span class="n">in2</span><span class="p">:</span> <span class="nc">Wire</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="nc">Wire</span><span class="p">):</span> <span class="nc">Unit</span> <span class="o">=</span> 
+        <span class="k">def</span> <span class="nf">orAction</span><span class="p">():</span> <span class="nc">Unit</span> <span class="o">=</span> 
+            <span class="kd">val</span> <span class="n">in1Sig</span> <span class="o">=</span> <span class="n">in1</span><span class="p">.</span><span class="n">getSignal</span><span class="p">()</span>
+            <span class="kd">val</span> <span class="n">in2Sig</span> <span class="o">=</span> <span class="n">in2</span><span class="p">.</span><span class="n">getSignal</span><span class="p">()</span>
+            <span class="n">afterDelay</span><span class="p">(</span><span class="nc">OrGateDelay</span><span class="p">)</span> <span class="p">{</span> <span class="n">output</span><span class="p">.</span><span class="n">setSignal</span><span class="p">(</span><span class="n">in1Sig</span> <span class="o">|</span> <span class="n">in2Sig</span><span class="p">)</span> <span class="p">}</span>
+        <span class="n">in1</span><span class="p">.</span><span class="n">addAction</span><span class="p">(</span><span class="n">orAction</span><span class="p">)</span>
+        <span class="n">in2</span><span class="p">.</span><span class="n">addAction</span><span class="p">(</span><span class="n">orAction</span><span class="p">)</span>
+    
+<span class="k">end</span> <span class="nc">Gates</span>
+
+<span class="k">trait</span> <span class="nc">Circuits</span> <span class="k">extends</span> <span class="nc">Gates</span><span class="p">:</span>
+    
+    <span class="k">def</span> <span class="nf">halfAdder</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nc">Wire</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nc">Wire</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nc">Wire</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="nc">Wire</span><span class="p">):</span> <span class="nc">Unit</span> <span class="o">=</span>
+        <span class="kd">val</span> <span class="n">d</span> <span class="o">=</span> <span class="nc">Wire</span><span class="p">()</span>
+        <span class="kd">val</span> <span class="n">e</span> <span class="o">=</span> <span class="nc">Wire</span><span class="p">()</span>
+        <span class="n">orGate</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+        <span class="n">andGate</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+        <span class="n">inverter</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+        <span class="n">andGate</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+
+<span class="k">end</span> <span class="nc">Circuits</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            
+                <!-- Previous / next buttons -->
+<div class='prev-next-area'> 
+    <a class='left-prev' id="prev-link" href="Week_3_Type-Directed_Programming.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">3. Type-Directed Programming</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="Week_5_Timely_Effects.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">5. Timely Effects</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            
+        </div>
+    </div>
+    <footer class="footer">
+  <p>
+    
+      By Manasij Venkatesh<br/>
+    
+        &copy; Copyright 2021.<br/>
+  </p>
+</footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+
+  </body>
+</html>

@@ -1,0 +1,703 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>3. Type-Directed Programming &#8212; Lectures notes for Functional Programming Design in Scala by Martin Odersky</title>
+    
+  <link href="_static/css/theme.css" rel="stylesheet">
+  <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.be7d3bbb2ef33a8344ce.js">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
+    <script async="async" src="https://unpkg.com/thebe@0.5.1/lib/index.js"></script>
+    <script>
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="4. Functions and State" href="Week_4_Functions_and_State.html" />
+    <link rel="prev" title="2. Lazy Evaluation" href="Week_2_Lazy_Evaluation.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Lectures notes for Functional Programming Design in Scala by Martin Odersky</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="Week_1_For_Expressions_and_Monads.html">
+   1. For Expressions and Monads
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Week_2_Lazy_Evaluation.html">
+   2. Lazy Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   3. Type-Directed Programming
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Week_4_Functions_and_State.html">
+   4. Functions and State
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Week_5_Timely_Effects.html">
+   5. Timely Effects
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/Week_3_Type-Directed_Programming.md"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.md</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/makto-toruk/coursera_scala_1"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        <a class="issues-button"
+            href="https://github.com/makto-toruk/coursera_scala_1/issues/new?title=Issue%20on%20page%20%2FWeek_3_Type-Directed_Programming.html&body=Your%20issue%20content%20here."><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
+        <a class="edit-button" href="https://github.com/makto-toruk/coursera_scala_1/edit/master/Week_3_Type-Directed_Programming.md"><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Edit this page"><i class="fas fa-pencil-alt"></i>suggest edit</button></a>
+    </div>
+</div>
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#contextual-abstractions">
+   3.1 Contextual Abstractions
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#using-clauses-and-given-instances">
+   3.2 Using clauses and given instances
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#type-classes">
+   3.3 Type Classes
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#abstract-algebra-and-type-classes">
+   3.4 Abstract algebra and type classes
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#context-passing">
+   3.5 Context passing
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#implicit-function-types">
+   3.6 Implicit function types
+  </a>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>3. Type-Directed Programming</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#contextual-abstractions">
+   3.1 Contextual Abstractions
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#using-clauses-and-given-instances">
+   3.2 Using clauses and given instances
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#type-classes">
+   3.3 Type Classes
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#abstract-algebra-and-type-classes">
+   3.4 Abstract algebra and type classes
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#context-passing">
+   3.5 Context passing
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#implicit-function-types">
+   3.6 Implicit function types
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="type-directed-programming">
+<h1>3. Type-Directed Programming<a class="headerlink" href="#type-directed-programming" title="Permalink to this headline">¶</a></h1>
+<section id="contextual-abstractions">
+<h2>3.1 Contextual Abstractions<a class="headerlink" href="#contextual-abstractions" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p>Origins of “con-text”</p>
+<ul class="simple">
+<li><p>“what comes with the text, but is not in the text”</p></li>
+</ul>
+</li>
+<li><p>How is context represented in other languages?</p>
+<ul class="simple">
+<li><p>Global values,</p></li>
+<li><p>Global mutable variables</p></li>
+<li><p>Monkey Patching</p></li>
+<li><p>Dependency injection frameworks</p></li>
+</ul>
+</li>
+<li><p>Functional Context Representation</p>
+<ul class="simple">
+<li><p>Context is represented with function parameters.</p></li>
+<li><p>Advantages:</p>
+<ul>
+<li><p>Flexible</p></li>
+<li><p>Types are checked</p></li>
+<li><p>Not relying on side effects</p></li>
+</ul>
+</li>
+<li><p>Disadvantages:</p>
+<ul>
+<li><p>Many function arguments</p></li>
+<li><p>Which hardly ever change</p></li>
+<li><p>Repetitive, errors are hard to spot.</p></li>
+</ul>
+</li>
+<li><p>But Scala can overcome some of these disadvantages.</p></li>
+</ul>
+</li>
+<li><p>Example: Sorting</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">sort</span><span class="p">(</span><span class="n">xs</span><span class="p">:</span> <span class="nc">List</span><span class="p">[</span><span class="nc">Int</span><span class="p">]):</span> <span class="nc">List</span><span class="p">[</span><span class="nc">Int</span><span class="p">]</span> <span class="o">=</span> 
+    <span class="p">...</span>
+        <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">y</span> <span class="k">then</span> <span class="p">...</span>
+    <span class="p">...</span>
+</pre></div>
+</div>
+</li>
+<li><p>How can this be generalized to all types?</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">sort</span><span class="p">[</span><span class="nc">T</span><span class="p">](</span><span class="n">xs</span><span class="p">:</span> <span class="nc">List</span><span class="p">[</span><span class="nc">T</span><span class="p">]):</span> <span class="nc">List</span><span class="p">[</span><span class="nc">T</span><span class="p">]</span> <span class="o">=</span> <span class="p">...</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>But we don’t have a single comparison function that works for all <code class="docutils literal notranslate"><span class="pre">T</span></code></p></li>
+</ul>
+</li>
+<li><p>We can pass a function</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">sort</span><span class="p">[</span><span class="nc">T</span><span class="p">](</span><span class="n">xs</span><span class="p">:</span> <span class="nc">List</span><span class="p">[</span><span class="nc">T</span><span class="p">])(</span><span class="n">lessThan</span><span class="p">:</span> <span class="p">(</span><span class="nc">T</span><span class="p">,</span> <span class="nc">T</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nc">Boolean</span><span class="p">):</span> <span class="nc">List</span><span class="p">[</span><span class="nc">T</span><span class="p">]</span> <span class="o">=</span> 
+    <span class="p">...</span>
+        <span class="k">if</span> <span class="n">lessThan</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="k">then</span> <span class="p">...</span>
+    <span class="p">...</span>
+</pre></div>
+</div>
+</li>
+<li><p>Examples:</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="kd">val</span> <span class="n">ints</span> <span class="o">=</span> <span class="nc">List</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+<span class="kd">val</span> <span class="n">strings</span> <span class="o">=</span> <span class="nc">List</span><span class="p">(</span><span class="s">&quot;apple&quot;</span><span class="p">,</span> <span class="s">&quot;pear&quot;</span><span class="p">,</span> <span class="s">&quot;orange&quot;</span><span class="p">,</span> <span class="s">&quot;pineapple&quot;</span><span class="p">)</span>
+
+<span class="n">sort</span><span class="p">(</span><span class="n">ints</span><span class="p">)((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">sort</span><span class="p">(</span><span class="n">strings</span><span class="p">)((</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="n">s1</span><span class="p">.</span><span class="n">compareTo</span><span class="p">(</span><span class="n">s2</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>Parametrization with Ordering:</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">sort</span><span class="p">[</span><span class="nc">T</span><span class="p">](</span><span class="n">xs</span><span class="p">:</span> <span class="nc">List</span><span class="p">[</span><span class="nc">T</span><span class="p">])(</span><span class="n">ord</span><span class="p">:</span> <span class="nc">Ordering</span><span class="p">[</span><span class="nc">T</span><span class="p">]):</span> <span class="nc">List</span><span class="p">[</span><span class="nc">T</span><span class="p">]</span> <span class="o">=</span> 
+    <span class="p">...</span>
+        <span class="k">if</span> <span class="n">ord</span><span class="p">.</span><span class="n">lt</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="k">then</span> <span class="p">...</span>
+    <span class="p">...</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>There already exists a class in the scala standard lib that represents orderings: <code class="docutils literal notranslate"><span class="pre">scala.math.Ordering[A]</span></code></p></li>
+</ul>
+</li>
+<li><p>Examples:</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">scala</span><span class="p">.</span><span class="nn">math</span><span class="p">.</span><span class="nc">Ordering</span>
+
+<span class="n">sort</span><span class="p">(</span><span class="n">ints</span><span class="p">)(</span><span class="nc">Ordering</span><span class="p">.</span><span class="nc">Int</span><span class="p">)</span>
+<span class="n">sort</span><span class="p">(</span><span class="n">strings</span><span class="p">)(</span><span class="nc">Ordering</span><span class="p">.</span><span class="nc">String</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>But can the compiler simply infer the ordering from the type of the input? Yes.</p></li>
+</ul>
+</li>
+<li><p>With Implicit Parameters</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">sort</span><span class="p">[</span><span class="nc">T</span><span class="p">](</span><span class="n">xs</span><span class="p">:</span> <span class="nc">List</span><span class="p">[</span><span class="nc">T</span><span class="p">])(</span><span class="k">using</span> <span class="n">ord</span><span class="p">:</span> <span class="nc">Ordering</span><span class="p">[</span><span class="nc">T</span><span class="p">]):</span> <span class="nc">List</span><span class="p">[</span><span class="nc">T</span><span class="p">]</span> <span class="o">=</span> <span class="p">...</span>
+
+<span class="n">sort</span><span class="p">(</span><span class="n">ints</span><span class="p">)</span>
+<span class="n">sort</span><span class="p">(</span><span class="n">strings</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>Type Inference: We have seen severalexamples where the compiler infers <em>types</em> from <em>values</em>.</p></li>
+<li><p>Term Inference: But the Scala compiler is capable of the opposite as well. To infer <em>expressions</em> (or <em>terms</em>) from <em>types</em>.</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">sort</span><span class="p">(</span><span class="n">ints</span><span class="p">)</span> <span class="c1">// sort[Int](ints)(using Ordering.Int)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="using-clauses-and-given-instances">
+<h2>3.2 Using clauses and given instances<a class="headerlink" href="#using-clauses-and-given-instances" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p>Using Clasuses matched explicitly</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">sort</span><span class="p">[</span><span class="nc">T</span><span class="p">](</span><span class="n">xs</span><span class="p">:</span> <span class="nc">List</span><span class="p">[</span><span class="nc">T</span><span class="p">])(</span><span class="k">using</span> <span class="n">ord</span><span class="p">:</span> <span class="nc">Ordering</span><span class="p">[</span><span class="nc">T</span><span class="p">]):</span> <span class="nc">List</span><span class="p">[</span><span class="nc">T</span><span class="p">]</span> <span class="o">=</span> <span class="p">...</span>
+
+<span class="n">sort</span><span class="p">(</span><span class="n">strings</span><span class="p">)(</span><span class="k">using</span> <span class="nc">Ordering</span><span class="p">.</span><span class="nc">String</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>Using clauses syntax:</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nc">Int</span><span class="p">)(</span><span class="k">using</span> <span class="n">a</span><span class="p">:</span> <span class="nc">A</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nc">B</span><span class="p">)</span> <span class="o">=</span> <span class="p">...</span>
+<span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)(</span><span class="k">using</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+
+<span class="c1">// or</span>
+
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nc">Int</span><span class="p">)(</span><span class="k">using</span> <span class="n">a</span><span class="p">:</span> <span class="nc">A</span><span class="p">)(</span><span class="k">using</span> <span class="n">b</span><span class="p">:</span> <span class="nc">B</span><span class="p">)</span> <span class="o">=</span> <span class="p">...</span>
+
+<span class="c1">// or mixed</span>
+
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nc">Int</span><span class="p">)(</span><span class="k">using</span> <span class="n">a</span><span class="p">:</span> <span class="nc">A</span><span class="p">)(</span><span class="n">y</span><span class="p">:</span> <span class="nc">Boolean</span><span class="p">)(</span><span class="k">using</span> <span class="n">b</span><span class="p">:</span> <span class="nc">B</span><span class="p">)</span> <span class="o">=</span> <span class="p">...</span>
+<span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)(</span><span class="k">using</span> <span class="n">a</span><span class="p">)(</span><span class="n">y</span><span class="p">)(</span><span class="k">using</span> <span class="n">b</span><span class="p">)</span> <span class="c1">// called explicitly</span>
+</pre></div>
+</div>
+</li>
+<li><p>Parameters of a <code class="docutils literal notranslate"><span class="pre">using</span></code> clause can be anonymous. Useful when the body of the function doesn’t mention the parameter at all (simply passes it implicitly)</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">sort</span><span class="p">[</span><span class="nc">T</span><span class="p">](</span><span class="n">xs</span><span class="p">:</span> <span class="nc">List</span><span class="p">[</span><span class="nc">T</span><span class="p">])(</span><span class="k">using</span> <span class="nc">Ordering</span><span class="p">[</span><span class="nc">T</span><span class="p">]):</span> <span class="nc">List</span><span class="p">[</span><span class="nc">T</span><span class="p">]</span> <span class="o">=</span>
+    <span class="p">...</span>
+    <span class="p">...</span> <span class="n">merge</span><span class="p">(</span><span class="n">sort</span><span class="p">(</span><span class="n">fst</span><span class="p">),</span> <span class="n">sort</span><span class="p">(</span><span class="n">snd</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">merge</span><span class="p">[</span><span class="nc">T</span><span class="p">](</span><span class="n">xs</span><span class="p">:</span> <span class="nc">List</span><span class="p">[</span><span class="nc">T</span><span class="p">])(</span><span class="k">using</span> <span class="nc">Ordering</span><span class="p">[</span><span class="nc">T</span><span class="p">]):</span> <span class="nc">List</span><span class="p">[</span><span class="nc">T</span><span class="p">]</span> <span class="o">=</span> <span class="p">...</span>
+</pre></div>
+</div>
+</li>
+<li><p>Using clause with context bounds:</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="c1">// instead of</span>
+<span class="k">def</span> <span class="nf">printSorted</span><span class="p">[</span><span class="nc">T</span><span class="p">](</span><span class="n">as</span><span class="p">:</span> <span class="nc">List</span><span class="p">[</span><span class="nc">T</span><span class="p">])(</span><span class="k">using</span> <span class="nc">Ordering</span><span class="p">[</span><span class="nc">T</span><span class="p">])</span> <span class="o">=</span>
+    <span class="n">println</span><span class="p">(</span><span class="n">sort</span><span class="p">(</span><span class="n">as</span><span class="p">))</span>
+
+<span class="c1">// with context bound</span>
+<span class="k">def</span> <span class="nf">printSorted</span><span class="p">[</span><span class="nc">T</span><span class="p">:</span> <span class="nc">Ordering</span><span class="p">](</span><span class="n">as</span><span class="p">:</span> <span class="nc">List</span><span class="p">[</span><span class="nc">T</span><span class="p">])</span> <span class="o">=</span>
+    <span class="n">println</span><span class="p">(</span><span class="n">sort</span><span class="p">(</span><span class="n">as</span><span class="p">))</span>
+</pre></div>
+</div>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Given</span></code> instances.</p>
+<ul>
+<li><p>For the above example to work, <code class="docutils literal notranslate"><span class="pre">Ordering.Int</span></code> definition must be a <code class="docutils literal notranslate"><span class="pre">given</span></code> instance.</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">object</span> <span class="nc">Ordering</span><span class="p">:</span>
+    <span class="k">given</span> <span class="nc">Int</span><span class="p">:</span> <span class="nc">Ordering</span><span class="p">[</span><span class="nc">Int</span><span class="p">]</span> <span class="k">with</span>
+        <span class="k">def</span> <span class="nf">compare</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nc">Int</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nc">Int</span><span class="p">):</span> <span class="nc">Int</span> <span class="o">=</span>
+            <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">y</span> <span class="k">then</span> <span class="o">-</span><span class="mi">1</span> <span class="k">else</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="n">y</span> <span class="k">then</span> <span class="mi">1</span> <span class="k">else</span> <span class="mi">0</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p>Given instances can also be anonymous</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">given</span> <span class="nc">Ordering</span><span class="p">[</span><span class="nc">Double</span><span class="p">]</span> <span class="k">with</span>
+    <span class="k">def</span> <span class="nf">compare</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nc">Int</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nc">Int</span><span class="p">):</span> <span class="nc">Int</span> <span class="o">=</span> <span class="p">...</span>
+
+<span class="c1">// will be synthesized to</span>
+<span class="k">given</span> <span class="n">given_Ordering_Double</span><span class="p">:</span> <span class="nc">Ordering</span><span class="p">[</span><span class="nc">Double</span><span class="p">]</span> <span class="k">with</span>
+    <span class="k">def</span> <span class="nf">compare</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nc">Int</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nc">Int</span><span class="p">):</span> <span class="nc">Int</span> <span class="o">=</span> <span class="p">...</span>
+</pre></div>
+</div>
+</li>
+<li><p>Summoning an Instance: we can refer to both named and anonymous instances by its type:</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">summon</span><span class="p">[</span><span class="nc">Ordering</span><span class="p">[</span><span class="nc">Int</span><span class="p">]]</span>
+<span class="n">summon</span><span class="p">[</span><span class="nc">Ordering</span><span class="p">[</span><span class="nc">Double</span><span class="p">]]</span>
+
+<span class="c1">// which expand to:</span>
+<span class="nc">Ordering</span><span class="p">.</span><span class="nc">Int</span>
+<span class="nc">Ordering</span><span class="p">.</span><span class="n">given_Ordering_Double</span>
+</pre></div>
+</div>
+</li>
+<li><p>Implicit Parameter Resolution: for an implicit parameter of type <code class="docutils literal notranslate"><span class="pre">T</span></code>, what <code class="docutils literal notranslate"><span class="pre">given</span></code> instances will the complier search for?</p>
+<ul class="simple">
+<li><p>has a type compatible with <code class="docutils literal notranslate"><span class="pre">T</span></code>,</p></li>
+<li><p>is visible at the point of the function call, or is defined in a companion object associated with <code class="docutils literal notranslate"><span class="pre">T</span></code>.</p></li>
+</ul>
+</li>
+<li><p>The search for a given instance of type <code class="docutils literal notranslate"><span class="pre">T</span></code> includes</p>
+<ul class="simple">
+<li><p>all the given instances that are visible (inherited, imported, or defined in an enclosing scope),</p></li>
+<li><p>the given instances found in a companion object <em>associated</em> with T.</p></li>
+</ul>
+</li>
+<li><p>What does <em>associated</em> mean? Besides the companion object of a class itself, the compiler will also consider:</p>
+<ul class="simple">
+<li><p>companion objects associated with any of T’s inherited types</p></li>
+<li><p>companion objects associated with any type argument in T</p></li>
+<li><p>if T is an inner class, the outer objects in which it is embedded</p></li>
+</ul>
+</li>
+<li><p>Example:</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">trait</span> <span class="nc">Foo</span><span class="p">[</span><span class="nc">T</span><span class="p">]</span>
+<span class="k">trait</span> <span class="nc">Bar</span><span class="p">[</span><span class="nc">T</span><span class="p">]</span> <span class="k">extends</span> <span class="nc">Foo</span><span class="p">[</span><span class="nc">T</span><span class="p">]</span>
+<span class="k">trait</span> <span class="nc">Baz</span><span class="p">[</span><span class="nc">T</span><span class="p">]</span> <span class="k">extends</span> <span class="nc">Bar</span><span class="p">[</span><span class="nc">T</span><span class="p">]</span>
+<span class="k">trait</span> <span class="nc">X</span>
+<span class="k">trait</span> <span class="nc">Y</span> <span class="k">extends</span> <span class="nc">X</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>if a <code class="docutils literal notranslate"><span class="pre">given</span></code> instance of type <code class="docutils literal notranslate"><span class="pre">Bar[Y]</span></code> is required, compiler will look into the companion objects:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">Bar</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Y</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">X</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Foo</span></code> (not <code class="docutils literal notranslate"><span class="pre">Baz</span></code>)</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Ambiguous given instances:</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">trait</span> <span class="nc">C</span><span class="p">:</span>
+<span class="kd">val</span> <span class="n">x</span><span class="p">:</span> <span class="nc">Int</span>
+<span class="k">given</span> <span class="n">c1</span><span class="p">:</span> <span class="nc">C</span> <span class="k">with</span>
+<span class="kd">val</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="k">given</span> <span class="n">c2</span><span class="p">:</span> <span class="nc">C</span> <span class="k">with</span>
+<span class="kd">val</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">f</span><span class="p">(</span><span class="k">using</span> <span class="n">c</span><span class="p">:</span> <span class="nc">C</span><span class="p">)</span> <span class="o">=</span> <span class="p">()</span>
+<span class="n">f</span>
+<span class="n">^</span>
+<span class="n">error</span><span class="p">:</span> <span class="n">ambiguous</span> <span class="k">implicit</span> <span class="n">arguments</span><span class="p">:</span>
+<span class="n">both</span> <span class="n">value</span> <span class="n">c1</span> <span class="n">and</span> <span class="n">value</span> <span class="n">c2</span>
+<span class="k">match</span> <span class="k">type</span> <span class="nc">C</span> <span class="n">of</span> <span class="n">parameter</span> <span class="n">c</span> <span class="n">of</span> <span class="n">method</span> <span class="n">f</span>
+</pre></div>
+</div>
+</li>
+<li><p>Priorities: several given instances don’t always generate ambiguity if one is more specific than the other</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">given</span> <span class="pre">a:</span> <span class="pre">A</span></code> is more specific than <code class="docutils literal notranslate"><span class="pre">given</span> <span class="pre">b:</span> <span class="pre">B</span></code> if:</p>
+<ul>
+<li><p>a is in a closer lexical scope than b, or</p></li>
+<li><p>a is defined in a class or object which is a subclass of the class defining b, or</p></li>
+<li><p>type A is a generic instance of type B, or</p></li>
+<li><p>type A is a subtype of type B</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Example 1: which given instance is summoned?</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">A</span><span class="p">[</span><span class="nc">T</span><span class="p">](</span><span class="n">x</span><span class="p">:</span> <span class="nc">T</span><span class="p">)</span>
+<span class="k">given</span> <span class="n">universal</span><span class="p">[</span><span class="nc">T</span><span class="p">](</span><span class="k">using</span> <span class="n">x</span><span class="p">:</span> <span class="nc">T</span><span class="p">):</span> <span class="nc">A</span><span class="p">[</span><span class="nc">T</span><span class="p">](</span><span class="n">x</span><span class="p">)</span>
+<span class="k">given</span> <span class="n">specific</span><span class="p">:</span> <span class="nc">A</span><span class="p">[</span><span class="nc">Int</span><span class="p">](</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">summon</span><span class="p">[</span><span class="nc">A</span><span class="p">[</span><span class="nc">Int</span><span class="p">]]</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">specific</span></code></p></li>
+</ul>
+</li>
+<li><p>Example 2:</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">trait</span> <span class="nc">A</span><span class="p">:</span>
+    <span class="k">given</span> <span class="n">ac</span><span class="p">:</span> <span class="nc">C</span>
+<span class="k">trait</span> <span class="nc">B</span> <span class="k">extends</span> <span class="nc">A</span><span class="p">:</span>
+    <span class="k">given</span> <span class="n">bc</span><span class="p">:</span> <span class="nc">C</span>
+<span class="k">object</span> <span class="nc">O</span> <span class="k">extends</span> <span class="nc">B</span><span class="p">:</span>
+    <span class="kd">val</span> <span class="n">x</span> <span class="o">=</span> <span class="n">summon</span><span class="p">[</span><span class="nc">C</span><span class="p">]</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">bc</span></code></p></li>
+</ul>
+</li>
+<li><p>Example 3:</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">given</span> <span class="n">ac</span><span class="p">:</span> <span class="nc">C</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">()</span> <span class="o">=</span>
+    <span class="k">given</span> <span class="n">b</span><span class="p">:</span> <span class="nc">C</span>
+    <span class="k">def</span> <span class="nf">g</span><span class="p">(</span><span class="k">using</span> <span class="n">c</span><span class="p">:</span> <span class="nc">C</span><span class="p">)</span> <span class="o">=</span> <span class="p">()</span>
+    
+    <span class="n">g</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">b</span></code></p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="type-classes">
+<h2>3.3 Type Classes<a class="headerlink" href="#type-classes" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p>Example implementation of ordering for Rationals</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">case</span> <span class="k">class</span> <span class="nc">Rational</span><span class="p">(</span><span class="n">numer</span><span class="p">:</span> <span class="nc">Int</span><span class="p">,</span> <span class="n">denom</span><span class="p">:</span> <span class="nc">Int</span><span class="p">)</span>
+
+<span class="k">trait</span> <span class="nc">Ordering</span><span class="p">[</span><span class="nc">A</span><span class="p">]</span> <span class="k">with</span>
+    <span class="k">def</span> <span class="nf">compare</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nc">A</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nc">A</span><span class="p">):</span> <span class="nc">Boolean</span>
+
+<span class="k">given</span> <span class="nc">RationalOrdering</span><span class="p">:</span> <span class="nc">Ordering</span><span class="p">[</span><span class="nc">Rational</span><span class="p">]</span> <span class="k">with</span>
+    <span class="k">def</span> <span class="nf">compare</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nc">Rational</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nc">Rational</span><span class="p">)</span> <span class="o">=</span> 
+        <span class="kd">val</span> <span class="n">xn</span> <span class="o">=</span> <span class="n">x</span><span class="p">.</span><span class="n">numer</span> <span class="o">*</span> <span class="n">y</span><span class="p">.</span><span class="n">denom</span>
+        <span class="kd">val</span> <span class="n">yn</span> <span class="o">=</span> <span class="n">y</span><span class="p">.</span><span class="n">numer</span> <span class="o">*</span> <span class="n">x</span><span class="p">.</span><span class="n">denom</span>
+
+        <span class="k">if</span> <span class="n">xn</span> <span class="o">&lt;</span> <span class="n">yn</span> <span class="k">then</span> <span class="o">-</span><span class="mi">1</span> <span class="k">else</span> <span class="k">if</span> <span class="n">xn</span> <span class="o">&gt;</span> <span class="n">yn</span> <span class="k">then</span> <span class="mi">1</span> <span class="k">else</span> <span class="mi">0</span>
+</pre></div>
+</div>
+</li>
+<li><p>Ordering for lists?</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">given</span> <span class="n">listOrdering</span><span class="p">[</span><span class="nc">A</span><span class="p">](</span><span class="k">using</span> <span class="n">ord</span><span class="p">:</span> <span class="nc">Ordering</span><span class="p">[</span><span class="nc">A</span><span class="p">])</span> <span class="n">as</span> <span class="nc">Ordering</span><span class="p">[</span><span class="nc">List</span><span class="p">[</span><span class="nc">A</span><span class="p">]]</span> <span class="k">with</span>
+
+    <span class="k">def</span> <span class="nf">compare</span><span class="p">(</span><span class="n">xs</span><span class="p">:</span> <span class="nc">List</span><span class="p">[</span><span class="nc">A</span><span class="p">],</span> <span class="n">ys</span><span class="p">:</span> <span class="nc">List</span><span class="p">[</span><span class="nc">A</span><span class="p">])</span> <span class="o">=</span> <span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">)</span> <span class="k">match</span>
+        <span class="k">case</span> <span class="p">(</span><span class="nc">Nil</span><span class="p">,</span> <span class="nc">Nil</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="mi">0</span>
+        <span class="k">case</span> <span class="p">(</span><span class="nc">Nil</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">case</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="nc">Nil</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="mi">1</span>
+        <span class="k">case</span> <span class="p">(</span><span class="n">x</span> <span class="o">::</span> <span class="n">xs1</span><span class="p">,</span> <span class="n">y</span> <span class="o">::</span> <span class="n">ys1</span><span class="p">)</span> <span class="o">=&gt;</span>
+            <span class="kd">val</span> <span class="n">c</span> <span class="o">=</span> <span class="n">ord</span><span class="p">.</span><span class="n">compare</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">c</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">then</span> <span class="n">c</span> <span class="k">else</span> <span class="n">compare</span><span class="p">(</span><span class="n">xs1</span><span class="p">,</span> <span class="n">ys1</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>Ordering for pairs of type (A, B)</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="nc">Address</span> <span class="o">=</span> <span class="p">(</span><span class="nc">Int</span><span class="p">,</span> <span class="nc">String</span><span class="p">)</span> <span class="c1">// Zipcode, Street Name</span>
+<span class="kd">val</span> <span class="n">xs</span> <span class="o">=</span> <span class="nc">List</span><span class="p">[</span><span class="nc">Address</span><span class="p">]</span>
+<span class="n">sort</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span>
+
+<span class="k">given</span> <span class="n">pairOrdering</span><span class="p">[</span><span class="nc">A</span><span class="p">,</span> <span class="nc">B</span><span class="p">](</span><span class="k">using</span> <span class="n">orda</span><span class="p">:</span> <span class="nc">Ordering</span><span class="p">[</span><span class="nc">A</span><span class="p">],</span> <span class="n">ordb</span><span class="p">:</span> <span class="nc">Ordering</span><span class="p">[</span><span class="nc">B</span><span class="p">]):</span> <span class="nc">Ordering</span><span class="p">[(</span><span class="nc">A</span><span class="p">,</span> <span class="nc">B</span><span class="p">)]</span> <span class="k">with</span>
+    <span class="k">def</span> <span class="nf">compare</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="nc">A</span><span class="p">,</span> <span class="nc">B</span><span class="p">),</span> <span class="n">y</span><span class="p">:</span> <span class="p">(</span><span class="nc">A</span><span class="p">,</span> <span class="nc">B</span><span class="p">))</span> <span class="o">=</span> 
+        <span class="kd">val</span> <span class="n">c</span> <span class="o">=</span> <span class="n">orda</span><span class="p">.</span><span class="n">compare</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">_1</span><span class="p">,</span> <span class="n">y</span><span class="p">.</span><span class="n">_1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">c</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">then</span> <span class="n">c</span> <span class="k">else</span> <span class="n">ordb</span><span class="p">.</span><span class="n">compare</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">_2</span><span class="p">,</span> <span class="n">y</span><span class="p">.</span><span class="n">_2</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="abstract-algebra-and-type-classes">
+<h2>3.4 Abstract algebra and type classes<a class="headerlink" href="#abstract-algebra-and-type-classes" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="context-passing">
+<h2>3.5 Context passing<a class="headerlink" href="#context-passing" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="implicit-function-types">
+<h2>3.6 Implicit function types<a class="headerlink" href="#implicit-function-types" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>I skipped notes for this lecture. It was mostly theoretical, and I was able to do the homework without diving too deep into these topics. Might come back to it later if required.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            
+                <!-- Previous / next buttons -->
+<div class='prev-next-area'> 
+    <a class='left-prev' id="prev-link" href="Week_2_Lazy_Evaluation.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">2. Lazy Evaluation</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="Week_4_Functions_and_State.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">4. Functions and State</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            
+        </div>
+    </div>
+    <footer class="footer">
+  <p>
+    
+      By Manasij Venkatesh<br/>
+    
+        &copy; Copyright 2021.<br/>
+  </p>
+</footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+
+  </body>
+</html>
